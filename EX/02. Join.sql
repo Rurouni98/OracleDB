@@ -363,5 +363,21 @@ SELECT E.ENO
 	WHERE E.SAL >= 3000
 	  AND E.DNO IN ('01', '10', '20', '60');
 
--- 학생의 학생번호, 학생이름, 과목번호, 과목이름, 기말고사 성적, 담당교수 번호, 담당교수 이름 조회
-
+-- 학생의 학생번호, 학생이름, 과목번호, 과목이름, 기말고사 성적, 기말고사 성적 등급, 담당교수 번호, 담당교수 이름 조회
+SELECT P.PNO
+	 , P.PNAME
+	 , C.CNO
+	 , C.CNAME
+	 , SC."RESULT"
+	 , GR.GRADE 
+	 , ST.SNO 
+	 , ST.SNAME
+	FROM COURSE C
+	JOIN SCORE SC
+	  ON C.CNO = SC.CNO 
+	JOIN PROFESSOR P
+	  ON C.PNO = P.PNO 
+	JOIN SCGRADE GR
+	  ON SC."RESULT" BETWEEN GR.LOSCORE AND GR.HISCORE 
+	JOIN STUDENT ST
+	  ON SC.SNO = ST.SNO;
