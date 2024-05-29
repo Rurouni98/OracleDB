@@ -1,0 +1,114 @@
+# 1. Stored Sub Program
+## 1. Stored Sub Program란?
+1. 저장 서브 프로그램이란 필요할 때마다 PL/SQL을 호출하여 사용하기 위해 데이터베이스에 PL/SQL구문을 저장해놓은 프로그램을 말한다.
+2. 저장 서브 프로그램은 오라클에 저장하고 공유하여 사용할 수 있어서 메모리, 성능, 재사용등의 장점을 갖는다.
+3. SF(Stored Function), SP(Stored Procedure), Trigger 등이 존재한다.
+
+## 2. Stored Procedure
+1. Stored Procedure는 특정한 기능, 특정한 작업을 처리하기 위한 서브 프로그램. 쿼리문에서는 호출이 불가능. 단독으로만 실행 가능.
+2. 파라미터가 없는 프로시저
+    - 프로시저의 선언
+        - CREATE OR REPLACE PROCEDURE 프로시저명  
+          IS | AS(DECLARE 대신 사용, 선언부가 없어도 명시해줘야 된다.)  
+              선언부
+          BEGIN
+              실행부
+          EXCEPTION
+              예외처리부
+          END [프로시저명];
+        - 프로시저의 실행  
+          EXEC 프로시저명;
+        - 프로시저의 삭제  
+          DROP PROCDURE 프로시저명;
+3. 파라미터가 있는 프로시저
+    - 프로시저의 선언
+        - CREATE OR REPLACE PROCEDURE 프로시저명
+        [(
+            파라미터1 [MODES] 자료형 [:= | DEFAULT 기본값],
+            파라미터2 [MODES] 자료형 [:= | DEFAULT 기본값],
+            파라미터3 [MODES] 자료형 [:= | DEFAULT 기본값],
+            ....
+        )]
+        IS
+            선언부
+        BEGIN
+            실행부
+        EXCEPTION
+            예외처리부
+        END;
+        - MODES에 들어가는 내용
+            - IN : 생략하면 IN으로 지정되고 프로시저 호출 시 파라미터 값들을 넣어주는 모드. 가장 많이 사용.
+            - OUT : 프로시저의 결과값 리턴.
+            - IN OUT : 호출할 때 값을 입력받고 실행 결과 값을 리턴.
+        - 파라미터의 자리수는 지정 불가, NOT NULL 제약조건도 사용불가.
+        - 파라미터가 있는 프로시저의 실행  
+        EXEC 프로시저명(파라미터값1, 파라미터값2, ....); 기본값이 지정된 파라미터는 생략할 수 있다.
+
+## 3. Stored Function
+1. 프로시저와 동일한 역할을 하는 서브 프로그램.
+2. 프로시저와의 차이점
+    - 프로시저는 EXEC명령어로 단독으로 호출하거나 다른 PL/SQL구문에서만 실행가능하지만, 함수는 EXEC 단독 호출, PL/SQL 구문에서 호출 및 쿼리문에서도 호출가능하다.
+    - 프로시저의 파라미터는 IN, OUT, IN OUT모드를 지정할 수 있지만 함수는 IN 모드만 사용가능.
+    - 프로시저는 OUT, IN OUT으로 지정된 여러개의 값을 반환할 수 있지만 함수는 하나의 리턴값만 가지고 RETURN문을 통해서 반환.
+3. 함수의 생성
+    - CREATE OR REPLACE FUNCTION 함수명  
+      (  
+          파라미터1 [IN] 자료형1,  
+          파라미터2 [IN] 자료형2,  
+          ....  
+      )   
+      RETURN 자료형
+      IS
+        선언부
+      BEGIN
+        실행부
+        RETURN 위에서 지정한 자료형의 값.
+      EXCEPTION
+        예외처리부
+      END [함수명];
+4. 함수의 삭제
+    - DROP FUNCTION 함수명;
+
+## 4. Trigger
+1. 트리거란 데이터베이스 안의 특정 상황이나 동작, 이벤트가 발생할 경우 자동으로 실행되는 기능을 정의하는 서브 프로그램.
+2. 트리거의 장점
+    - 데이터와 연관된 여러 작업에 필요한 PL/SQL을 여러개 작성해서 실행해야될 번거로움을 줄일 수 있다.
+    - 제약조건만으로는 어려운 복잡한 데이터 규칙을 정의할 수 있다.
+    - 데이터의 변경과 관련된 일련의 정보를 기록해 둘 수 있으므로 공유 데이터에 대한 보안성과 안정성 그리고 오류 발생시 이전 데이터 기록을 찾아서 대처할 수 있다.
+3. 트리거는 이벤트 발생으로 다른 데이터를 추가하거나 변경한 작업이 주로 일어나기 때문에 무분별하게 사용하면 데이터베이스의 성능이 떨어진다.
+4. 테이블, 뷰, 스키마, 데이터베이스 전체에 대한 DML(INSERT, UPDATE, DELETE), DDL(CREATE, DROP, ALTER) 등을 지정할 수 있는데 테이블과 뷰에 대한 DML을 지정하는 트리거가 가장 많이 사용되기 때문에 DML을 지정하는 트리거 사용에 대해서만 확인한다.
+5. 트리거의 선언
+    - CREATE OR REPLACE TRIGGER 트리거명  
+      BEFORE | AFTER  
+      INSERT | UPDATE | DELETE ON 테이블명  
+      [REFERENCING OLD AS 이전데이터 사용할 명칭 NEW AS 새로운 데이터 사용할 명칭]  
+      [FOR EACH ROW WHEN 조건식]  
+      [FOLLOWS 트리거2, 트리거3, ...]  
+      [ENABLE | DISABLE]  
+      DECALRE  
+        선언부  
+      BEGIN  
+        실행부  
+      EXCEPTION  
+        예외처리부  
+      END [트리거명];
+    - BEFORE | AFTER : 트리거가 동작할 시점. DML명령어가 동작하기 전이나 동작한 후에 트리거가 동작할 건지에 대한 시점을 결정.
+    - INSERT | UPDATE | DELETE ON 테이블명 : 지정한 테이블에 DML이 발생할 때 트리거가 동작하도록 해주는 DML 지정문. INSERT OR UPDATE OR DELETE, OR로 여러개의 DML문도 지정 가능
+    - REFERENCING OLD AS 이전데이터 사용할 명칭 NEW AS 새로운 데이터 사용할 명칭 : 이전 데이터나 새로운 데이터를 변수로 선언하여 사용할 수 있는 구문. 이전 데이터는 UPDATE, DELETE문에서 사용 가능, 새로운 데이터는 UPDATE, INSERT문에서 사용 가능. 실행부에서 사용할 때 ':명칭.컬럼명' 으로 사용.
+    - FOR EACH ROW WHEN 조건식 : 각각의 행에 대해 트리거가 동작할 건지를 결정. WHEN 조건에 해당하는 행에 대해서만 트리거가 동작하게 할 수 있다. 지정하지 않으면 트리거가 한 번만 동작하고 끝난다.
+    - FOLLOWS 트리거2, 트리거3, ... : 연관된 트리거들의 동작 순서를 지정.
+    - ENABLE | DISABLE : 해당 트리거의 활성화 여부 지정.
+6. MERGE INTO
+- 조건에 맞는 데이터가 존재하면 업데이트를 해주고 존재하지 않으면 인서트되는 쿼리문
+- MERGE INTO 인서트나 업데이트가 될 테이블명  
+  USING 비교대상이 될 테이블 | 뷰 | 서브쿼리 | DUAL 
+  ON (비교조건)
+  WHEN MATCHED THEN  
+    UPDATE SET 
+        컬럼명1 = 값1,
+        컬럼명2 = 값2,
+        ....
+    | DELETE
+  WHEN NOT MATCHED THEN
+    INSERT (컬럼1, 컬럼2, 컬럼3, ...)
+    VALUES (값1, 값2, 값3, ...)

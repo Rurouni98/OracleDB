@@ -71,6 +71,7 @@ SELECT CNAME || '과목은 ' || ST_NUM || '학점 과목입니다.'
 SELECT PNAME || '교수는 ' || SECTION || '학과 소속입니다.'
     FROM PROFESSOR;
 
+
 --4) 학교에는 어떤 학과가 있는지 검색한다(학생 테이블 기반으로 검색한다)
 SELECT DISTINCT MAJOR
     FROM STUDENT;

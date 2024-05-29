@@ -1,0 +1,223 @@
+# 1. PL/SQL
+## 1. PL/SQL이란?
+1. PL/SQL(Procedural Langauge extension to SQL)은 SQL 문장안에서 변수를 만들고 조건처리(IF), 반복처리(LOOP, WHILE, FOR)를 할 수 있는 오라클 자체에 내장되어있는 절차적인 언어.
+2. PROCEDURE, FUNCTION, TRIGGER ..이 PL/SQL로 포함된다.
+3. PL/SQL의 장점
+    - BLOCK 구조로 다수의 SQL문을 한번에 DB에 보내므로 처리속도를 
+      향상시킴
+    - BLOCK 구조로 되어있어서 모듈화하기 편하다.
+    - 큰 BLOCK안에 작은 BLOCK들을 여러개 생성할 수 있어서 다양한 
+      처리가 가능
+    - 단순하거나 복잡한 변수를 선언해서 사용할 수 있기 때문에 데이
+      터를 계속 조회해야 하는 일이 적어진다.
+    - EXCEPTION 처리가 가능하기 때문에 에러가 발생해도 다른 루틴을 
+      생성해서 에러가 발생하지 않은 것처럼 처리가능
+
+## 2. PL/SQL 구조
+1. PL/SQL은 명령의 필요한 변수나 SQL문을 모아서 구성하는데 이렇게 모아둔 하나의 구성 단위를 블록(BLOCK).
+2. BLOCK은 선언부(DECLARE), 실행부(BEGIN), 예외처리부(EXCEPTION)로 구분된다.
+3. DECLARE(선언부) : 개발자의 선택에 따라 생략가능. 실행에 필요한 
+                     변수, 상수 등을 선언
+4. BEGIN(실행부) : 필수적으로 포함되어야 하는 부분. 조건문, 반복문 
+                   등 실제 실행되는 코드, SQL를 작성.
+5. EXCEPTION(예외처리부) : 생략가능하고 실행부에서 소스가 실행되다
+                          가 예외가 발생했을 때 처리해줄 내용을 
+                          작성.
+6. PL/SQL의 구조
+    - DECLARE
+          변수, 상수 선언;
+      BEGIN
+          실행될 소스 코드(SQL);
+      EXCEPTION
+          예외처리할 내용;
+      END;
+7. PL/SQL 작성 시 주의사항
+    - DECLARE, BEGIN, EXCEPTION 뒤에는 ;붙이지 않는다.
+    - 주석은 --(한줄주석) /*다중주석*/를 사용.
+    - PL/SQL 작성을 마치고 실행하기 위해서는 마지막에 /를 사용.
+
+## 3. PL/SQL의 변수, 상수
+1. 변수는 일시적으로 데이터를 저장하기 위한 요소. 이름과 데이터타입을 DECLARE부분에 작성한다.
+2. DECLARE부분에 작성된 변수는 BEGIN부분에서 가져와서 사용한다.
+3. 변수의 선언
+    - 이름 데이터타입:=값 또는 SELECT쿼리 또는 수식;
+4. 상수는 한 번 지정된 값이 변하지 않는 변수.
+5. 상수의 선언
+    - 이름 CONSTANT 데이터타입:=값 또는 SELECT쿼리 또는 수식;
+6. 변수의 기본값 지정
+    - 이름 데이터타입 DEFAULT 기본값(값 또는 SELECT쿼리 또는 수
+      식);
+7. 참조형 변수의 사용
+    - 이름 테이블명.열이름%TYPE:=값;
+    - 이름 테이블명%ROWTYPE;
+
+## 4. 조건문
+1. PL/SQL에서 조건문으로는 IF, CASE문을 사용할 수 있다.
+2. IF 조건 THEN 실행문 : 조건에 충족하면 실행문이 실행되는 조건문
+3. IF 조건 THEN 실행문1 ELSE 실행문2 : 조건에 충족되면 실행문1이 실행되고 조건에 충족하지 않으면 실행문2 실행되는 형태의 조건
+4. IF 조건1 THEN 실행문1
+   ELSIF 조건2 THEN 실행문2
+   ELSIF 조건3 THEN 실행문3
+   ....
+   ELSE 실행문N : 조건을 검사하여 해당 조건이 충족하는 실행문을 실
+                 행하고 모든 조건에 충족하지 않을 때 ELSE의 실행 
+                 문을 실행
+5. END IF; : 조건문의 종료를 알림.
+6. CASE 비교대상 
+    WHEN 값1 THEN 실행문1;
+    WHEN 값2 THEN 실행문2;
+    ....
+    ELSE
+        실행문N;
+   END CASE;
+7. CASE
+    WHEN 조건식1 THEN 실행문1;
+    WHEN 조건식2 THEN 실행문2;
+    ELSE
+        실행문N;
+   END CASE;
+
+## 5. 반복문
+1. PL/SQL에서는 기본 LOOP, WHILE LOOP, FOR LOOP, Cusor FOR LOOP의 네가지 반복문 제공.
+2. 기본 LOOP : 기본 반복문
+3. WHILE LOOP : 특정 조건식의 결과를 통해 반복
+4. FOR LOOP :  반복 횟수를 지정해서 횟수만큼 반복
+5. Cusor FOR LOOP : 커서를 통해 반복 수행
+6. 반복문 제어 명령어
+    - EXIT : 현재 수행중인 반복문 중단(break;)
+    - EXIT WHEN 조건 : 조건이 충족하면 반복문을 종료
+    - CONTINUE : 현재 진행중인 실행을 건너뛰고 다음번 실행으로 넘
+                 어감
+    - CONTINUE WHEN 조건 : 조건이 충족하면 현재 실행을 건너뜀.
+7. 기본 LOOP
+    - LOOP
+        반복 실행될 작업;
+      END LOOP;
+8. WHILE LOOP
+    - WHILE 조건 LOOP
+        반복 실행될 작업;
+      END LOOP;
+9. FOR LOOP
+    - FOR i IN 시작값..종료값 LOOP
+        반복 실행 작업;
+      END LOOP;
+    - FOR i IN REVERSE 시작값..종료값 LOOP
+        반복 실행 작업;
+      END LOOP;
+
+## 6. 레코드
+1. 레코드는 자바의 클래스와 같은 역할. 다양한 데이터 타입의 여러개의 변수를 갖는 자료형.
+2. 데이터 타입은 VARCHAR2, NUMBER, DATE ... 기본 데이터 타입과 테이블명.컬럼명%TYPE, 테이블명%ROWTYPE.. 등 선언가능.
+3. 레코드의 선언 방법
+    - TYPE 레코드명 IS RECORD(
+          변수이름1 데이터타입[NOT NULL, DEFAULT]:=값 OR 수식;
+          변수이름2 테이블명.컬럼명%TYPE;
+          ....
+      );
+4. 레코드의 사용 방법
+    - 레코드변수이름 레코드명;
+    - 레코드변수이름.변수이름1:=값;
+    - DBMS_OUTPUT.PUT_LINE(레코드변수이름.변수이름2);
+
+## 7. 연관배열
+1. 같은 데이터 타입의 데이터를 여러개 가질 수 있는 자료형. 인덱스를 키라고 부르며 키와 값으로 구성된다.
+2. 연관배열 선언 방법
+    - TYPE 배열명 IS TABLE OF 데이터타입[NOT NULL, DEFAULT]
+      INDEX BY 인덱스의 형태(BINARY_INTEGER, PLS_INTEGER, VARCHAR2...)
+3. 연관배열 사용 방법
+    - 배열변수이름 배열명;
+    - 배열변수이름(index);
+4. 연관배열의 메소드
+    - EXISTS(INDEX) : 해당 INDEX에 데이터가 존재하는 지 여부를 판단. TRUE/FALSE 리턴.
+    - COUNT : 배열에 저장된 데이터의 개수를 반환해주는 메소드.
+    - LIMIT : 배열의 최대크기 반환.
+    - FIRST : 배열의 첫 번째 인덱스 번호 반환.
+    - LAST : 배열의 마지막 인덱스 번호 반환.
+    - PRIOR(INDEX) : 해당 INDEX 바로 이전 INDEX 반환. 바로 이전 INDEX 없으면 NULL반환.
+    - NEXT(INDEX) : 해당 INDEX 바로 뒤 INDEX를 반환. 바로 뒤 INDEX가 없으면 NULL반환.
+    - DELETE : 배열에 저장되어 있는 모든 데이터 삭제
+    - DELETE(INDEX) : 해당 INDEX에 들어있는 데이터 삭제
+    - DELETE(N, M) : N 인덱스부터 M 인덱스 까지의 모든 데이터 삭제.
+
+## 7. 커서
+1. 커서는 쿼리문의 결과를 저장해두는 메모리 공간.
+2. PL/SQL에서는 쿼리문의 결과인 커서를 이용해서 데이터를 조작할 수 있다. 결과를 변수로 담거나, 레코드, ROWTYPE으로 담아서 사용할 수 있게 해준다.
+3. 명시적 커서의 선언
+    - CURSOR 커서명 IS 쿼리문;
+    - 선언부(DECLARE)에서 작성
+4. 커서의 사용 방법
+    - 실행부(BEGIN)에서 사용
+    - OPEN 커서명;
+    - FETCHT 커서명 INTO 변수; //읽어온 데이터를 사용
+    - CLOSE 커서명;
+5. 커서의 특수한 속성
+    - 커서명%NOTFOUND : FETCH로 추출된 행이 없으면 TRUE, 있으면 FALSE 리턴.
+    - 커서명%FOUND : FETCH로 추출된 행이 있으면 TRUE, 없으면 FALSE 리턴.
+    - 커서명%ROWCOUNT : 현재까지 추출된 행의 개수를 리턴.
+    - 커서명%ISOPEN : 커서가 열려있으면 TRUE, 닫혀있으면 FALSE 리턴.
+6. 커서 파라미터
+    - 고정적인 값을 조회한 결과가 아닌 유동적인 데이터를 커서에 담아서 사용하고 싶을 때 커
+      서에 파라미터를 추가한다.
+    - 선언 : CURSOR 커서명(파라미터명 데이터타입, ....)
+    - 사용 : OPEN 커서명(데이터타입 값);
+7. 묵시적 커서
+    - 커서를 선언하지 않고 쿼리문을 실행했을 때 오라클 내부에서 결과를 저장하게 되는데 오
+      라클 내부에 저장된 결과를 사용할 수 있는 커서
+    - DML(INSERT, DELETE, UPDATE) 같은 경우도 영향을 받은 행의 개수를 결과로 저장하고 있
+      는데 묵시적 커서를 사용하면 영향받은 행의 개수를 가져올 수도 있다.
+    - SQL%NOTFOUND, SQL%FOUND, SQL%ROWCOUNT, SQL%ISOPEN 속성들을 사용할 수 있다.
+
+## 7. 예외처리
+1. PL/SQL에서 정상적으로 동작이 수행되지 않을 때 오류가 발생했다고 하는데 오류가 발생했을 때 EXCEPTION으로 예외처리부를 작성하여 오류를 처리해야 한다.
+2. 예외처리부에는 대부분 ROLLBACK; 처리해서 위에서 실행된 쿼리문이 적용되지 않도록 트랜잭션을 취소한다.
+3. 예외 종류
+    - 내부예외
+        - 사전 정의된 예외 : 내부 예외중에 예외번호를 지정한 이름이 존재하는 예외.
+        - 이름이 없는 예외 : 내부 예외중에 이름이 없는 예외(사용자가 경우에 따라서 이름을 
+                            지정해 줄 수 있다.)
+    - 사용자 정의 예외 : 사용자가 직접 정의한 예외
+4. 자주 사용되는 사전 정의 예외
+    - ACCESS_INTO_NULL : ORA-06530, 초기화되지 않은 객체 속성 값 할당.
+    - CASE_NOT_FOUND : ORA-06592, CASE문의 WHEN절에 조건이 없고 ELSE절도 없을 경우
+    - COLLECTION_IS_NULL : ORA-06531, 초기화되지 않은 배열(값이 할당되지 않은 배열) 사
+                           용 했을 경우 
+    - CURSOR_ALREADY_OPEN : ORA-06511, 이미 오픈된 커서를 재 오픈했을 경우
+    - DUP_VAL_ON_INDEX : ORA-00001, UNIQUE 인덱스가 있는 열에 중복된 값을 저장했을 경우
+    - INVALID_CURSOR : ORA-01001, 오픈되지 않은 커서를 클로즈할 때와 같이 커서의 사용 잘
+                       못됐을 경우
+    - INVALID_NUMBER : ORA-01722, 숫자타입에 숫자타입이 아닌 값을 저장할 경우
+    - LOGIN_DENIED : ORA-01017, 사용자 이름이나 비밀번호 오입력했을 경우
+    - NO_DATA_FOUND : ORA-01403, SELECT 문의 결과가 0행으로 리턴됐을 경우
+    - NOT_LOGGED_ON : ORA-01012, DB에 접속이 안 되어 있을 경우
+    - PROGRAM_ERROR : ORA-06501, PL/SQL 자체 내부 에러 발생했을 경우
+    - ROWTYPE_MISMATCH : ORA-06504, 커서변수와 데이터타입이 호환되지 않을 경우
+    - TIMEOUT_ON_RESOURCE : ORA-00051, 자원 대기시간 초과했을 경우
+    - TOO_MANY_ROWS : ORA-01422, SELECT INTO 결과 행이 여러개일 때
+    - VALUE_ERROR : ORA-06502, 산술, 변환, 잘림, 제약조건 에러가 발생했을 경우
+    - ZERO_DIVIDE : ORA-01476, 0으로 나눴을 경우
+5. 예외처리부 작성
+    - WHEN 예외이름1 THEN
+          예외이름1인 예외가 발생했을 때 처리할 내용;
+      WHEN 예외이름2 THEN
+          예외이름2인 예외가 발생했을 때 처리할 내용;
+      ...
+      WHEN OTHERS THEN
+          위에서 처리하지 못한 예외가 발생했을 때 처리할 내용;
+6. 이름없는 내부예외
+    - 선언부에서 예외이름 선언
+    - 예외이름 EXCEPTION;  
+      PRAGMA EXCEPTION_INIT(예외이름, 예외번호);
+    - EXCEPTION 부분에서는 선언부에 선언된 이름으로 예외처리
+      WHEN 예외이름 THEN
+          처리내용;
+7. 사용자 정의 예외
+    - 선언부에서 예외이름을 선언
+    - 예외이름 EXCEPTION;
+    - 실행부에서
+      RAISE 예외이름
+    - 예외처리부에서 예외이름으로 처리
+    - WHEN 예외이름 THEN  
+          처리내용;
+8. SQLCODE, SQLERRM
+    - SQLCODE : 에러코드번호 리턴
+    - SQLERRM : 에러 메시지를 리턴
